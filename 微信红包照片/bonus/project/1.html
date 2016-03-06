@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <style>
+    .myContainer {
+      position: relative;
+      width: 640px;
+      height: 854px;
+      margin: 0 auto;
+    }
+
+    #myImg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      filter: blur(20px);
+      -webkit-filter: blur(20px);
+    }
+
+    #myBlur {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .operate {
+      margin: 0 auto;
+      width: 640px;
+    }
+  </style>
+</head>
+<body>
+<div class="myContainer">
+  <img id="myImg" src="img/1.jpg" alt=""/>
+  <canvas id="myBlur" width="640" height="854"></canvas>
+</div>
+<div class="operate">
+  <a href="#" id="show" class="btn btn-success pull-left">show</a>
+  <a href="#" id="showall" class="btn btn-danger pull-right">showall</a>
+</div>
+<script>
+  var canvas = document.getElementById("myBlur");
+  var show = document.getElementById("show");
+  var showall = document.getElementById("showall");
+
+  var width = canvas.width;
+  var height = canvas.height;
+  var r = 100;
+  var context = canvas.getContext("2d");
+  function loadImg(){
+    var img = new Image();
+    img.src = "img/1.jpg";
+    img.onload = function(){
+      context.drawImage(img,0,0);
+    }
+  }
+  show.onclick = function(){
+    context.restore();
+    context.clearRect(0,0,width,height);
+    loadImg();
+    context.save();
+    context.beginPath();
+    var x = Math.floor(Math.random()*width) + r;
+    var y = Math.floor(Math.random()*height) + r;
+    x = x >= width ? x-r : x;
+    y = y >= height ? y-r : y;
+    context.arc(x,y,r,0,Math.PI*2);
+    context.clip();
+  }
+  showall.onclick = function(){
+    var plus = 50;
+    var timer =
+      setInterval(function(){
+        plus+=50;
+        context.restore();
+        context.clearRect(0,0,width,height);
+        loadImg();
+        context.save();
+        context.beginPath();
+        var x = width/2;
+        var y = height/2;
+        context.arc(x,y,plus,0,Math.PI*2);
+        context.clip();
+        if(plus > y+100){
+          clearInterval(timer);
+        }
+      },100);
+  }
+</script>
+</body>
+</html>
